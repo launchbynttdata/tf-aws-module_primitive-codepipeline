@@ -11,7 +11,7 @@
 // limitations under the License.
 
 resource "random_string" "random" {
-  length  = 16
+  length  = 10
   special = false
   upper   = false
 }
