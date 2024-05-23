@@ -4,6 +4,7 @@ source_s3_bucket_prefix = "tf-aws-module_primitive-codepipeline-test-bucket"
 pipeline_type           = "V2"
 execution_mode          = "PARALLEL"
 
+
 stages = [
   {
     stage_name = "Source"
