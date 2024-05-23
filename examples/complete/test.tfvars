@@ -1,6 +1,6 @@
-name                    = "tf-aws-module-codepipeline-test-pipeline"
+name                    = "tf-aws-module_primitive-codepipeline-test-pipeline"
 create_s3_source        = true
-source_s3_bucket_prefix = "tf-aws-module-codepipeline-test-bucket"
+source_s3_bucket_prefix = "tf-aws-module_primitive-codepipeline-test-bucket"
 pipeline_type           = "V2"
 execution_mode          = "PARALLEL"
 

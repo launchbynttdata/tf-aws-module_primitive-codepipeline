@@ -16,20 +16,20 @@ LCAF_ENV_FILE = .lcafenv
 -include $(LCAF_ENV_FILE)
 
 # Source repository for repo manifests
-REPO_MANIFESTS_URL ?= https://github.com/nexient-llc/launch-common-automation-framework.git
+REPO_MANIFESTS_URL ?= https://github.com/launchbynttdata/launch-common-automation-framework.git
 # Branch of source repository for repo manifests. Other tags not currently supported.
-REPO_BRANCH ?= refs/tags/0.3.0
+REPO_BRANCH ?= refs/tags/1.0.0
 # Path to seed manifest in repository referenced in REPO_MANIFESTS_URL
 REPO_MANIFEST ?= manifests/terraform_modules/seed/manifest.xml
 
 # Settings to pull in Nexient version of (google) repo utility that supports environment substitution:
-REPO_URL ?= https://github.com/nexient-llc/git-repo.git
+REPO_URL ?= https://github.com/launchbynttdata/git-repo.git
 # Branch of the repository referenced by REPO_URL to use
 REPO_REV ?= main
 export REPO_REV REPO_URL
 
 # Example variable to substituted after init, but before sync in repo manifests.
-GITBASE ?= https://github.com/nexient-llc/
+GITBASE ?= https://github.com/launchbynttdata/
 GITREV ?= main
 export GITBASE GITREV
 
@@ -51,7 +51,7 @@ MISE_INSTALLED = $(shell which mise > /dev/null 2>&1; echo $$?)
 ASDF_INSTALLED = $(shell which asdf > /dev/null 2>&1; echo $$?)
 REPO_INSTALLED = $(shell which repo > /dev/null 2>&1; echo $$?)
 GIT_USER_SET = $(shell git config --get user.name > /dev/null 2>&1; echo $$?)
-GIT_EMAIL_SET = $(shell git config --get user.name > /dev/null 2>&1; echo $$?)
+GIT_EMAIL_SET = $(shell git config --get user.email > /dev/null 2>&1; echo $$?)
 
 .PHONY: configure-git-hooks
 configure-git-hooks: configure-dependencies

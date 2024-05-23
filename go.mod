@@ -1,4 +1,4 @@
-module github.com/nexient-llc/tf-aws-module-codepipeline
+module github.com/launchbynttdata/tf-aws-module_primitive-codepipeline
 
 go 1.20
 
