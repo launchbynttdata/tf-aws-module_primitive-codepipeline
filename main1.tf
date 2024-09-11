@@ -26,7 +26,7 @@ resource "aws_codepipeline" "this" {
     }]
 
     content {
-      location = aws_s3_bucket.codepipeline_bucket.bucket
+      location = local.codepipeline_bucket
       type     = "S3"
 
       dynamic "encryption_key" {
@@ -83,7 +83,7 @@ resource "aws_s3_bucket" "codepipeline_bucket" {
 }
 
 resource "aws_s3_bucket_logging" "codepipeline_bucket_logging" {
-  count         = length(var.log_target_bucket) > 0 ? 1 : 0
+  count         = local.log_target_condition
   bucket        = aws_s3_bucket.codepipeline_bucket.id
   target_bucket = var.log_target_bucket
   target_prefix = local.bucket_prefix
@@ -245,9 +245,14 @@ data "aws_iam_policy_document" "pipeline_event_role_policy" {
   }
 }
 
+resource "aws_iam_policy" "pipeline_event_role_policy" {
+  name   = "${var.name}-event-role-policy"
+  policy = data.aws_iam_policy_document.pipeline_event_role_policy.json
+}
+
 resource "aws_iam_role_policy_attachment" "pipeline_event_role_attach_" {
   role       = aws_iam_role.combined_role.name
-  policy_arn = aws_iam_role_policy.combined_role_policy.name
+  policy_arn = aws_iam_policy.pipeline_event_role_policy.arn
 }
 
 
