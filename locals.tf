@@ -19,3 +19,13 @@ locals {
 
   tags = merge(local.default_tags, var.tags)
 }
+
+locals {
+  combined_role_name    = "${var.name}-combined-role"
+  combined_policy_name  = "${var.name}-combined-policy"
+  codepipeline_bucket   = aws_s3_bucket.codepipeline_bucket.arn
+  source_bucket_arn     = aws_s3_bucket.source[0].arn
+  event_name_limit      = substr("${var.name}-event", 0, 63)
+  log_target_condition  = length(var.log_target_bucket) > 0 ? 1 : 0
+  create_s3_source_cond = var.create_s3_source ? 1 : 0
+}
