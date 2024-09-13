@@ -20,7 +20,7 @@ output "arn" {
   value       = module.codepipeline.arn
 }
 
-output "source_s3_bucket_arn" {
-  description = "The codepipeline source s3 bucket ARN"
-  value       = module.codepipeline.source_s3_bucket_arn
-}
+# output "source_s3_bucket_arn" {
+#   description = "The codepipeline source s3 bucket ARN"
+#   value       = module.codepipeline.source_s3_bucket_arn
+# }

@@ -15,17 +15,17 @@ variable "name" {
   type        = string
 }
 
-variable "create_s3_source" {
-  description = "Create S3 source bucket for CodePipeline."
-  type        = string
-  default     = false
-}
+# variable "create_s3_source" {
+#   description = "Create S3 source bucket for CodePipeline."
+#   type        = string
+#   default     = false
+# }
 
-variable "source_s3_bucket_prefix" {
-  description = "Prefix of the S3 source bucket. Random characters will be added to the end to ensure uniqueness."
-  type        = string
-  default     = null
-}
+# variable "source_s3_bucket_prefix" {
+#   description = "Prefix of the S3 source bucket. Random characters will be added to the end to ensure uniqueness."
+#   type        = string
+#   default     = null
+# }
 
 variable "stages" {
   description = "One or more stage blocks."
@@ -47,6 +47,11 @@ variable "execution_mode" {
     condition     = contains(["PARALLEL", "QUEUED", "SUPERSEDED"], var.execution_mode)
     error_message = "Must be either `PARALLEL`, `QUEUED`, or `SUPERSEDED`."
   }
+}
+
+variable "artifact_bucket_name" {
+  description = "the name of the S3 bucket used for storing the artifacts in the Codepipeline"
+  type = string
 }
 
 variable "tags" {

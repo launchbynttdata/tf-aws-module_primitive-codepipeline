@@ -14,7 +14,7 @@ stages = [
     provider   = "S3"
     version    = "1"
     configuration = {
-      S3Bucket             = "aaron-test-bucket-778189110199"
+      S3Bucket             = "osahon-test-020127659860"
       S3ObjectKey          = "trigger_pipeline.zip"
       PollForSourceChanges = "false"
     }
