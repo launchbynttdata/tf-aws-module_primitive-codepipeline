@@ -14,7 +14,7 @@ locals {
   default_tags = {
     provisioner = "Terraform"
   }
-  #account_id = data.aws_caller_identity.current.account_id
+  account_id = data.aws_caller_identity.current.account_id
   #bucket_prefix = length(var.log_target_prefix) == 0 ? "AWSLogs/${local.account_id}/s3audit" : var.log_target_prefix
 
   tags = merge(local.default_tags, var.tags)
