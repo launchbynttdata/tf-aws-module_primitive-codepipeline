@@ -30,11 +30,11 @@ variable "stages" {
   type        = any
 }
 
-variable "codepipeline_iam" {
-  description = "Additional IAM actions to add to CodePipeline IAM role."
-  type        = map(list(string))
-  default     = null
-}
+# variable "codepipeline_iam" {
+#   description = "Additional IAM actions to add to CodePipeline IAM role."
+#   type        = map(list(string))
+#   default     = null
+# }
 
 variable "pipeline_type" {
   description = "The CodePipeline pipeline_type. Valid options are V1, V2"
