@@ -3,6 +3,7 @@ create_s3_source        = true
 source_s3_bucket_prefix = "tf-aws-module_primitive-codepipeline-test-bucket"
 pipeline_type           = "V2"
 execution_mode          = "PARALLEL"
+artifact_bucket_name    = "osahon-test-020127659860"
 
 
 stages = [

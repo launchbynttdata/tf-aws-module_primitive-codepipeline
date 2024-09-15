@@ -10,7 +10,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {}
+
+data "aws_s3_bucket" "artifact_bucket" {
+  bucket = var.artifact_bucket_name
+}
 
 resource "aws_codepipeline" "this" {
   name           = var.name
@@ -26,7 +30,7 @@ resource "aws_codepipeline" "this" {
     }]
 
     content {
-      location = var.artifact_bucket_name
+      location = data.aws_s3_bucket.artifact_bucket.bucket
       type     = "S3"
 
       dynamic "encryption_key" {
@@ -90,8 +94,50 @@ resource "aws_iam_role" "codepipeline_role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
+data "aws_iam_policy_document" "codepipeline_policy" {
+
+  # Eventbridge trigger
+  statement {
+    effect = "Allow"
+    actions = [
+      "cloudwatch:*",
+      "sns:*",
+      "sqs:*"
+    ]
+    resources = ["*"]
+  }
+
+  # Start any stage CodeBuild projects
+  statement {
+    effect = "Allow"
+    actions = [
+      "codebuild:BatchGetBuilds",
+      "codebuild:StartBuild",
+      "codebuild:BatchGetBuildBatches",
+      "codebuild:StartBuildBatch"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:*"
+    ]
+    resources = [
+      data.aws_s3_bucket.artifact_bucket.arn,
+      "${data.aws_s3_bucket.artifact_bucket.arn}/*",
+    ]
+  }
+}
 resource "aws_iam_role_policy" "codepipeline_policy" {
   name   = "codepipeline_policy"
   role   = aws_iam_role.codepipeline_role.id
-  policy = data.aws_iam_policy_document.assume_role.json
+  policy = data.aws_iam_policy_document.codepipeline_policy.json
+}
+
+resource "random_string" "random" {
+  length  = 10
+  special = false
+  upper   = false
 }
