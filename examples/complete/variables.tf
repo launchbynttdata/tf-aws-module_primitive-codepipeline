@@ -31,7 +31,6 @@ variable "stages" {
   description = "One or more stage blocks."
   type        = any
 }
-
 variable "pipeline_type" {
   description = "The CodePipeline pipeline_type. Valid options are V1, V2"
   type        = string
@@ -51,7 +50,7 @@ variable "execution_mode" {
 
 variable "artifact_bucket_name" {
   description = "the name of the S3 bucket used for storing the artifacts in the Codepipeline"
-  type = string
+  type        = string
 }
 
 variable "tags" {
