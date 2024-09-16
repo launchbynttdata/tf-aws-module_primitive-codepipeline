@@ -45,29 +45,35 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = [for s in var.stages : {
-      stage_name = lookup(s, "stage_name", "My-Stage")
-      name       = s.name
-      action     = s.action
-    } if(lookup(s, "enabled", true))]
+    for_each = [for stage_val in var.stages : {
+      stage_name       = try(stage_val.stage_name, "My-Stage")
+      name             = try(stage_val.name, "Manual-Approval")
+      category         = try(stage_val.category, "Approval")
+      owner            = try(stage_val.owner, "AWS")
+      provider         = try(stage_val.provider, "Manual")
+      version          = try(stage_val.version, "1")
+      configuration    = try(stage_val.configuration, {})
+      input_artifacts  = try(stage_val.input_artifacts, [])
+      output_artifacts = try(stage_val.output_artifacts, [])
+      run_order        = try(stage_val.run_order, null)
+      region           = try(stage_val.region, null)
+      namespace        = try(stage_val.namespace, null)
+    }]
 
     content {
       name = stage.value.stage_name
-      dynamic "action" {
-        for_each = stage.value.action
-        content {
-          name             = lookup(action.value, "name", "Manual-Approval")
-          owner            = lookup(action.value, "owner", "AWS")
-          version          = lookup(action.value, "version", "1")
-          category         = lookup(action.value, "category", "Approval")
-          provider         = lookup(action.value, "provider", "Manual")
-          input_artifacts  = lookup(action.value, "input_artifacts", [])
-          output_artifacts = lookup(action.value, "output_artifacts", [])
-          configuration    = lookup(action.value, "configuration", {})
-          run_order        = lookup(action.value, "run_order", null)
-          region           = lookup(action.value, "region", null)
-          namespace        = lookup(action.value, "namespace", null)
-        }
+      action {
+        name             = stage.value.name
+        category         = stage.value.category
+        owner            = stage.value.owner
+        provider         = stage.value.provider
+        version          = stage.value.version
+        configuration    = stage.value.configuration
+        input_artifacts  = stage.value.input_artifacts
+        output_artifacts = stage.value.output_artifacts
+        run_order        = stage.value.run_order
+        region           = stage.value.region
+        namespace        = stage.value.namespace
       }
     }
   }
