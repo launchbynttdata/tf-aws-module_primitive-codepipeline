@@ -16,6 +16,7 @@ data "aws_s3_bucket" "artifact_bucket" {
   bucket = var.artifact_bucket_name
 }
 
+### Resouces to create codepipeline
 resource "aws_codepipeline" "this" {
   name           = var.name
   role_arn       = aws_iam_role.codepipeline_role.arn
@@ -44,6 +45,7 @@ resource "aws_codepipeline" "this" {
     }
   }
 
+  # Add each stage to the pipeline from the codebuild_stage var.
   dynamic "stage" {
     for_each = [for stage_val in var.stages : {
       stage_name       = try(stage_val.stage_name, "My-Stage")
@@ -102,8 +104,7 @@ resource "aws_iam_role" "codepipeline_role" {
 
 data "aws_iam_policy_document" "codepipeline_policy" {
 
-  # Eventbridge trigger
-  statement {
+    statement {
     effect = "Allow"
     actions = [
       "cloudwatch:*",
