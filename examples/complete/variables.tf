@@ -15,18 +15,6 @@ variable "name" {
   type        = string
 }
 
-# variable "create_s3_source" {
-#   description = "Create S3 source bucket for CodePipeline."
-#   type        = string
-#   default     = false
-# }
-
-# variable "source_s3_bucket_prefix" {
-#   description = "Prefix of the S3 source bucket. Random characters will be added to the end to ensure uniqueness."
-#   type        = string
-#   default     = null
-# }
-
 variable "stages" {
   description = "One or more stage blocks."
   type        = any
