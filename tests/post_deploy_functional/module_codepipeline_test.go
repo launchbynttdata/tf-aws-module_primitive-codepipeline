@@ -44,8 +44,6 @@ type Stage struct {
 
 type TestTfvars struct {
 	Name           string  `json:"name"`
-	CreateS3Source bool    `json:"create_s3_source"`
-	SourceS3Bucket string  `json:"source_s3_bucket"`
 	Stages         []Stage `json:"stages"`
 }
 

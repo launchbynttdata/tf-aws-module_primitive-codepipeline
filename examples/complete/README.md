@@ -45,8 +45,6 @@ provider "random" {}
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_name"></a> [name](#input\_name) | The name of the pipeline | `string` | n/a | yes |
-| <a name="input_create_s3_source"></a> [create\_s3\_source](#input\_create\_s3\_source) | Create S3 source bucket for CodePipeline. | `string` | `false` | no |
-| <a name="input_source_s3_bucket_prefix"></a> [source\_s3\_bucket\_prefix](#input\_source\_s3\_bucket\_prefix) | Prefix of the S3 source bucket. Random characters will be added to the end to ensure uniqueness. | `string` | `null` | no |
 | <a name="input_stages"></a> [stages](#input\_stages) | One or more stage blocks. | `any` | n/a | yes |
 | <a name="input_pipeline_type"></a> [pipeline\_type](#input\_pipeline\_type) | The CodePipeline pipeline\_type. Valid options are V1, V2 | `string` | `"V2"` | no |
 | <a name="input_execution_mode"></a> [execution\_mode](#input\_execution\_mode) | The CodePipeline execution\_mode. Valid options are `PARALLEL`, `QUEUED`, `SUPERSEDED` (default) | `string` | `"SUPERSEDED"` | no |
@@ -58,5 +56,6 @@ provider "random" {}
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | The codepipeline ID |
 | <a name="output_arn"></a> [arn](#output\_arn) | The codepipeline ARN |
-| <a name="output_source_s3_bucket_arn"></a> [source\_s3\_bucket\_arn](#output\_source\_s3\_bucket\_arn) | The codepipeline source s3 bucket ARN |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+c

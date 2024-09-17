@@ -20,7 +20,3 @@ output "arn" {
   value       = aws_codepipeline.this.arn
 }
 
-output "source_s3_bucket_arn" {
-  description = "The codepipeline source s3 bucket ARN"
-  value       = aws_s3_bucket.source[0].arn
-}

@@ -10,9 +10,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-data "aws_caller_identity" "current" {}
+data "aws_s3_bucket" "artifact_bucket" {
+  bucket = var.artifact_bucket_name
+}
 
-### Resources to create CodePipeline
+### Resouces to create codepipeline
 resource "aws_codepipeline" "this" {
   name           = var.name
   role_arn       = aws_iam_role.codepipeline_role.arn
@@ -27,7 +29,7 @@ resource "aws_codepipeline" "this" {
     }]
 
     content {
-      location = aws_s3_bucket.codepipeline_bucket.bucket
+      location = data.aws_s3_bucket.artifact_bucket.bucket
       type     = "S3"
 
       dynamic "encryption_key" {
@@ -41,7 +43,7 @@ resource "aws_codepipeline" "this" {
     }
   }
 
-  # Add each stage to the pipeline from the codebuild_stages var.
+  # Add each stage to the pipeline from the codebuild_stage var.
   dynamic "stage" {
     for_each = [for stage_val in var.stages : {
       stage_name       = try(stage_val.stage_name, "My-Stage")
@@ -79,28 +81,7 @@ resource "aws_codepipeline" "this" {
   tags = local.tags
 }
 
-# CodePipeline bucket used to store Output Artifacts
-resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket        = join("-", ["codepipeline", random_string.random.result])
-  force_destroy = true
-}
-
-resource "aws_s3_bucket_logging" "codepipeline_bucket_logging" {
-  count = length(var.log_target_bucket) > 0 ? 1 : 0
-
-  bucket = aws_s3_bucket.codepipeline_bucket.id
-
-  target_bucket = var.log_target_bucket
-  target_prefix = local.bucket_prefix
-}
-
-resource "random_string" "random" {
-  length  = 16
-  special = false
-  upper   = false
-}
-
-# CodePipeline Role
+#CodePipeline Role
 data "aws_iam_policy_document" "assume_role" {
   statement {
     effect = "Allow"
@@ -121,8 +102,7 @@ resource "aws_iam_role" "codepipeline_role" {
 
 data "aws_iam_policy_document" "codepipeline_policy" {
 
-  # Eventbridge trigger
-  statement {
+    statement {
     effect = "Allow"
     actions = [
       "cloudwatch:*",
@@ -150,142 +130,19 @@ data "aws_iam_policy_document" "codepipeline_policy" {
       "s3:*"
     ]
     resources = [
-      aws_s3_bucket.codepipeline_bucket.arn,
-      "${aws_s3_bucket.codepipeline_bucket.arn}/*",
+      data.aws_s3_bucket.artifact_bucket.arn,
+      "${data.aws_s3_bucket.artifact_bucket.arn}/*",
     ]
   }
-
-  # Allow the ability to access source bucket
-  dynamic "statement" {
-    for_each = var.create_s3_source ? [1] : []
-    content {
-      effect = "Allow"
-      actions = [
-        "s3:GetObject",
-        "s3:GetObjectVersion",
-        "s3:GetBucketVersioning",
-        "s3:PutObjectAcl",
-        "s3:PutObject",
-      ]
-      resources = [
-        aws_s3_bucket.source[0].arn,
-        "${aws_s3_bucket.source[0].arn}/*",
-      ]
-    }
-  }
-
-  # Add additional policy statements if any
-  dynamic "statement" {
-    for_each = var.codepipeline_iam != null ? [1] : []
-    content {
-      effect    = "Allow"
-      actions   = var.codepipeline_iam.actions
-      resources = var.codepipeline_iam.resources
-    }
-  }
 }
-
 resource "aws_iam_role_policy" "codepipeline_policy" {
   name   = "codepipeline_policy"
   role   = aws_iam_role.codepipeline_role.id
   policy = data.aws_iam_policy_document.codepipeline_policy.json
 }
 
-### Resources to create an S3 Event Bridge trigger
-resource "aws_s3_bucket" "source" {
-  count = var.create_s3_source ? 1 : 0
-
-  bucket        = replace(var.source_s3_bucket, "_", "-")
-  force_destroy = true
-}
-
-resource "aws_s3_bucket_logging" "source_bucket_logging" {
-  count = length(var.log_target_bucket) > 0 && var.create_s3_source ? 1 : 0
-
-  bucket = aws_s3_bucket.source[0].id
-
-  target_bucket = var.log_target_bucket
-  target_prefix = local.bucket_prefix
-}
-
-resource "aws_s3_bucket_versioning" "versioning" {
-  bucket = aws_s3_bucket.source[0].id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
-  bucket = aws_s3_bucket.source[0].bucket
-
-  rule {
-    bucket_key_enabled = true
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_cloudwatch_event_rule" "pipeline_event" {
-  count       = aws_s3_bucket.source != null ? 1 : 0
-  name        = substr("${var.name}-event", 0, 63)
-  description = "Cloud watch event when zip is uploaded to s3"
-
-  event_pattern = <<EOF
-{
-  "source": ["aws.s3"],
-  "detail-type": ["AWS API Call via CloudTrail"],
-  "detail": {
-    "eventSource": ["s3.amazonaws.com"],
-    "eventName": ["PutObject", "CompleteMultipartUpload", "CopyObject"],
-    "requestParameters": {
-      "bucketName": ["${aws_s3_bucket.source[0].id}"],
-      "key": ["${var.s3_trigger_file}"]
-    }
-  }
-}
-EOF
-}
-
-resource "aws_cloudwatch_event_target" "code_pipeline" {
-  count     = aws_s3_bucket.source != null ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.pipeline_event[0].name
-  target_id = "SendToCodePipeline"
-  arn       = aws_codepipeline.this.arn
-  role_arn  = aws_iam_role.pipeline_event_role.arn
-}
-
-data "aws_iam_policy_document" "event_bridge_role" {
-  count = aws_s3_bucket.source != null ? 1 : 0
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["events.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "pipeline_event_role" {
-  name               = substr("${var.name}-event-bridge-role", 0, 63)
-  assume_role_policy = data.aws_iam_policy_document.event_bridge_role[0].json
-}
-
-data "aws_iam_policy_document" "pipeline_event_role_policy" {
-  statement {
-    actions   = ["codepipeline:StartPipelineExecution"]
-    resources = [aws_codepipeline.this.arn]
-    effect    = "Allow"
-  }
-}
-
-resource "aws_iam_policy" "pipeline_event_role_policy" {
-  name   = "${var.name}-event-role-policy"
-  policy = data.aws_iam_policy_document.pipeline_event_role_policy.json
-}
-
-resource "aws_iam_role_policy_attachment" "pipeline_event_role_attach_policy" {
-  role       = aws_iam_role.pipeline_event_role.name
-  policy_arn = aws_iam_policy.pipeline_event_role_policy.arn
+resource "random_string" "random" {
+  length  = 10
+  special = false
+  upper   = false
 }

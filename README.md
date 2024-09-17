@@ -146,25 +146,13 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_cloudwatch_event_rule.pipeline_event](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
-| [aws_cloudwatch_event_target.code_pipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource |
 | [aws_codepipeline.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codepipeline) | resource |
-| [aws_iam_policy.pipeline_event_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.codepipeline_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role.pipeline_event_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.codepipeline_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy_attachment.pipeline_event_role_attach_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_s3_bucket.codepipeline_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket.source](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_logging.codepipeline_bucket_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
-| [aws_s3_bucket_logging.source_bucket_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
-| [aws_s3_bucket_server_side_encryption_configuration.sse](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [aws_s3_bucket_versioning.versioning](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [random_string.random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.codepipeline_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.event_bridge_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.pipeline_event_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
@@ -174,11 +162,7 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | The name of the pipeline | `string` | n/a | yes |
 | <a name="input_artifact_stores"></a> [artifact\_stores](#input\_artifact\_stores) | One or more artifact\_store blocks. | `list(map(string))` | <pre>[<br>  {<br>    "use_kms": false<br>  }<br>]</pre> | no |
 | <a name="input_stages"></a> [stages](#input\_stages) | One or more stage blocks. | `any` | n/a | yes |
-| <a name="input_create_s3_source"></a> [create\_s3\_source](#input\_create\_s3\_source) | Create S3 source bucket for CodePipeline. | `string` | `false` | no |
-| <a name="input_source_s3_bucket"></a> [source\_s3\_bucket](#input\_source\_s3\_bucket) | Name of the S3 source bucket. | `string` | `null` | no |
-| <a name="input_s3_trigger_file"></a> [s3\_trigger\_file](#input\_s3\_trigger\_file) | S3 file that the event rule is looking for to trigger the pipeline. | `string` | `"trigger_pipeline.zip"` | no |
-| <a name="input_log_target_bucket"></a> [log\_target\_bucket](#input\_log\_target\_bucket) | Target bucket for S3 Access Logs. If left blank, access logging is disabled. | `string` | `""` | no |
-| <a name="input_log_target_prefix"></a> [log\_target\_prefix](#input\_log\_target\_prefix) | Prefix for S3 Access logs. Defaults to AWSLogs/<AWS Account ID>/s3audit if not otherwise provided. | `string` | `""` | no |
+| <a name="input_source_s3_bucket"></a> [artifact\_bucket\_name](#input\_source\_s3\_bucket) | Name of the S3 source bucket. | `string` | `null` | no |
 | <a name="input_codepipeline_iam"></a> [codepipeline\_iam](#input\_codepipeline\_iam) | Additional IAM actions to add to CodePipeline IAM role. | `map(list(string))` | `null` | no |
 | <a name="input_pipeline_type"></a> [pipeline\_type](#input\_pipeline\_type) | The CodePipeline pipeline\_type. Valid options are V1, V2 | `string` | `"V1"` | no |
 | <a name="input_execution_mode"></a> [execution\_mode](#input\_execution\_mode) | The CodePipeline execution\_mode. Valid options are `PARALLEL`, `QUEUED`, `SUPERSEDED` (default) | `string` | `"SUPERSEDED"` | no |
@@ -190,5 +174,4 @@ No modules.
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | The codepipeline ID |
 | <a name="output_arn"></a> [arn](#output\_arn) | The codepipeline ARN |
-| <a name="output_source_s3_bucket_arn"></a> [source\_s3\_bucket\_arn](#output\_source\_s3\_bucket\_arn) | The codepipeline source s3 bucket ARN |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

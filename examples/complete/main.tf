@@ -20,12 +20,11 @@ module "codepipeline" {
   source = "../.."
 
   name = var.name
-
-  create_s3_source = var.create_s3_source
-  source_s3_bucket = local.source_bucket_name
-  stages           = var.stages
-  pipeline_type    = var.pipeline_type
-  execution_mode   = var.execution_mode
+  
+  artifact_bucket_name = var.artifact_bucket_name
+  stages               = var.stages
+  pipeline_type        = var.pipeline_type
+  execution_mode       = var.execution_mode
 
   tags = var.tags
 }

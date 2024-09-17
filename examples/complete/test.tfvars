@@ -1,8 +1,7 @@
-name                    = "tf-aws-module_primitive-codepipeline-test-pipeline"
-create_s3_source        = true
-source_s3_bucket_prefix = "tf-aws-module_primitive-codepipeline-test-bucket"
-pipeline_type           = "V2"
-execution_mode          = "PARALLEL"
+name                 = "tf-aws-module_primitive-codepipeline-test-pipeline"
+pipeline_type        = "V2"
+execution_mode       = "PARALLEL"
+artifact_bucket_name = "osahon-test-020127659860"
 
 
 stages = [
@@ -14,7 +13,7 @@ stages = [
     provider   = "S3"
     version    = "1"
     configuration = {
-      S3Bucket             = "aaron-test-bucket-778189110199"
+      S3Bucket             = "osahon-test-020127659860"
       S3ObjectKey          = "trigger_pipeline.zip"
       PollForSourceChanges = "false"
     }
