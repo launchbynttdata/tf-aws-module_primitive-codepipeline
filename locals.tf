@@ -14,7 +14,6 @@ locals {
   default_tags = {
     provisioner = "Terraform"
   }
-  account_id = data.aws_caller_identity.current.account_id
   
   tags = merge(local.default_tags, var.tags)
 }
