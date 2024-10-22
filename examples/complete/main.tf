@@ -20,7 +20,7 @@ module "codepipeline" {
   source = "../.."
 
   name = var.name
-  
+
   artifact_bucket_name = var.artifact_bucket_name
   stages               = var.stages
   pipeline_type        = var.pipeline_type

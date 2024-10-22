@@ -63,6 +63,7 @@ azure_env.sh
 
 # VS Code
 .vscode/
+.devcontainer/
 
 # Ignore json files created by terratest
 examples/complete/output.json
