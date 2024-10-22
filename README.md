@@ -127,7 +127,7 @@ Currently, the `encrypt at transit` is not supported in terraform. There is an o
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0, <= 1.5.5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.32.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.6.0 |
 
@@ -135,8 +135,8 @@ Currently, the `encrypt at transit` is not supported in terraform. There is an o
 
 | Name | Version |
 |------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.39.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.72.1 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
 
 ## Modules
 
@@ -150,10 +150,9 @@ No modules.
 | [aws_iam_role.codepipeline_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.codepipeline_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [random_string.random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.codepipeline_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.pipeline_event_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_s3_bucket.artifact_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/s3_bucket) | data source |
 
 ## Inputs
 
@@ -162,10 +161,9 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | The name of the pipeline | `string` | n/a | yes |
 | <a name="input_artifact_stores"></a> [artifact\_stores](#input\_artifact\_stores) | One or more artifact\_store blocks. | `list(map(string))` | <pre>[<br>  {<br>    "use_kms": false<br>  }<br>]</pre> | no |
 | <a name="input_stages"></a> [stages](#input\_stages) | One or more stage blocks. | `any` | n/a | yes |
-| <a name="input_source_s3_bucket"></a> [artifact\_bucket\_name](#input\_source\_s3\_bucket) | Name of the S3 source bucket. | `string` | `null` | no |
-| <a name="input_codepipeline_iam"></a> [codepipeline\_iam](#input\_codepipeline\_iam) | Additional IAM actions to add to CodePipeline IAM role. | `map(list(string))` | `null` | no |
 | <a name="input_pipeline_type"></a> [pipeline\_type](#input\_pipeline\_type) | The CodePipeline pipeline\_type. Valid options are V1, V2 | `string` | `"V1"` | no |
 | <a name="input_execution_mode"></a> [execution\_mode](#input\_execution\_mode) | The CodePipeline execution\_mode. Valid options are `PARALLEL`, `QUEUED`, `SUPERSEDED` (default) | `string` | `"SUPERSEDED"` | no |
+| <a name="input_artifact_bucket_name"></a> [artifact\_bucket\_name](#input\_artifact\_bucket\_name) | the name of the S3 bucket used for storing the artifacts in the Codepipeline | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | An arbitrary map of tags that can be added to all resources. | `map(string)` | `{}` | no |
 
 ## Outputs

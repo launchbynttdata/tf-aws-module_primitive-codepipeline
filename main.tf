@@ -102,7 +102,7 @@ resource "aws_iam_role" "codepipeline_role" {
 
 data "aws_iam_policy_document" "codepipeline_policy" {
 
-    statement {
+  statement {
     effect = "Allow"
     actions = [
       "cloudwatch:*",
