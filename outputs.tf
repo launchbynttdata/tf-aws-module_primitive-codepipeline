@@ -19,4 +19,3 @@ output "arn" {
   description = "The codepipeline ARN"
   value       = aws_codepipeline.this.arn
 }
-
