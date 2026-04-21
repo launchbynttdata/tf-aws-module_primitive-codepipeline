@@ -3,14 +3,17 @@ package tests
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/gruntwork-io/terratest/modules/logger"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/codepipeline"
+	"github.com/gruntwork-io/terratest/modules/retry"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 	"github.com/stretchr/testify/assert"
@@ -96,10 +99,20 @@ func setupAndTestPipeline(t *testing.T, dir string) {
 		Name: aws.String(actualID),
 	}
 
-	result, err := client.GetPipeline(context.TODO(), input)
-	if err != nil {
-		assert.Error(t, err, "The expected pipeline was not found")
-	}
+	var result *codepipeline.GetPipelineOutput
+	status, err := retry.DoWithRetryE(t, "Wait for CodePipeline to be readable", 6, 10*time.Second, func() (string, error) {
+		current, currentErr := client.GetPipeline(context.TODO(), input)
+		if currentErr != nil {
+			return "", currentErr
+		}
+		if current == nil || current.Pipeline == nil {
+			return "", fmt.Errorf("GetPipeline returned an empty response")
+		}
+		result = current
+		return "pipeline is readable", nil
+	})
+	assert.NoError(t, err, "The expected pipeline was not found")
+	logger.Log(t, status)
 
 	assert.NotNil(t, result, "GetPipeline returned nil result")
 	if result == nil {
