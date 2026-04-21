@@ -86,7 +86,6 @@ func setupAndTestPipeline(t *testing.T, dir string) {
 
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
-		config.WithSharedConfigProfile(os.Getenv("AWS_PROFILE")),
 	)
 	if err != nil {
 		assert.Error(t, err, "can't connect to aws")
