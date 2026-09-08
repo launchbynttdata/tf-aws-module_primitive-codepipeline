@@ -43,8 +43,8 @@ type Stage struct {
 }
 
 type TestTfvars struct {
-	Name           string  `json:"name"`
-	Stages         []Stage `json:"stages"`
+	Name   string  `json:"name"`
+	Stages []Stage `json:"stages"`
 }
 
 func TestCodePipeline(t *testing.T) {
@@ -75,9 +75,9 @@ func setupAndTestPipeline(t *testing.T, dir string) {
 
 	test_structure.SaveTerraformOptions(t, dir, terraformOptions)
 
-	terraform.InitAndApply(t, terraformOptions)
+	terraform.InitAndApplyContext(t, context.Background(), terraformOptions)
 	logger.Log(t, "Verifying pipeline arn")
-	actualId := terraform.Output(t, terraformOptions, "arn")
+	actualId := terraform.OutputContext(t, context.Background(), terraformOptions, "arn")
 	assert.NotEmpty(t, actualId, "pipeline ID is empty")
 	assert.Regexp(t, expectedPatternPipelineID, actualId, "PipelineID does not match expected pattern")
 
@@ -90,7 +90,7 @@ func setupAndTestPipeline(t *testing.T, dir string) {
 	}
 	logger.Log(t, "Connected to AWS")
 	client := codepipeline.NewFromConfig(cfg)
-	actualID := terraform.Output(t, terraformOptions, "id")
+	actualID := terraform.OutputContext(t, context.Background(), terraformOptions, "id")
 	assert.NotEmpty(t, actualId, "pipeline ID is empty")
 	input := &codepipeline.GetPipelineInput{
 		Name: aws.String(actualID),
@@ -141,5 +141,5 @@ func setupAndTestPipeline(t *testing.T, dir string) {
 
 func tearDownPipeline(t *testing.T, dir string) {
 	terraformOptions := test_structure.LoadTerraformOptions(t, dir)
-	terraform.Destroy(t, terraformOptions)
+	terraform.DestroyContext(t, context.Background(), terraformOptions)
 }
