@@ -1,3 +1,6 @@
+.DS_Store
+Thumbs.db
+
 terraform.*
 .repo/
 components/
@@ -55,11 +58,5 @@ terraform.rc
 azure_env.sh
 .releaserc.json
 
-# Pre-commit hook
-
 # VS Code
 .vscode/
-.devcontainer/
-
-# Ignore json files created by terratest
-examples/complete/output.json

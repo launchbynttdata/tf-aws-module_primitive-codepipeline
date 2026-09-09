@@ -1,17 +1,8 @@
 # Complete CodePipeline Example
-This example demonstrates creating a CodePipeline pipeline. It includes 2 stages. First stage is a source S3 bucket that triggers the pipeline with an event bridge notification. The second stage is a manual approval stage.
 
+This example creates a CodePipeline with two stages: an S3 source that can trigger the pipeline, and a manual approval stage. It calls the root module from `examples/complete/main.tf`.
 
-## Provider requirements
-Make sure a `provider.tf` file is created with the below contents inside the `examples/with_tls_enforced` directory
-```shell
-provider "aws" {
-  profile = "<profile_name>"
-  region  = "<aws_region>"
-}
-# Used to create a random integer postfix for aws resources
-provider "random" {}
-```
+The repository Makefile generates `provider.tf` when you run `make lint` or `make test` from the repository root. Sign in to AWS first.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -52,4 +43,3 @@ provider "random" {}
 | <a name="output_arn"></a> [arn](#output\_arn) | The codepipeline ARN |
 | <a name="output_id"></a> [id](#output\_id) | The codepipeline ID |
 <!-- END_TF_DOCS -->
-c
