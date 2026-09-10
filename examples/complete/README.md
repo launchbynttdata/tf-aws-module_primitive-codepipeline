@@ -1,19 +1,10 @@
 # Complete CodePipeline Example
-This example demonstrates creating a CodePipeline pipeline. It includes 2 stages. First stage is a source S3 bucket that triggers the pipeline with an event bridge notification. The second stage is a manual approval stage.
 
+This example creates a CodePipeline with two stages: an S3 source that can trigger the pipeline, and a manual approval stage. It calls the root module from `examples/complete/main.tf`.
 
-## Provider requirements
-Make sure a `provider.tf` file is created with the below contents inside the `examples/with_tls_enforced` directory
-```shell
-provider "aws" {
-  profile = "<profile_name>"
-  region  = "<aws_region>"
-}
-# Used to create a random integer postfix for aws resources
-provider "random" {}
-```
+The repository Makefile generates `provider.tf` when you run `make lint` or `make test` from the repository root. Sign in to AWS first.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -21,12 +12,6 @@ provider "random" {}
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.32.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.6.0 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
 
 ## Modules
 
@@ -44,18 +29,17 @@ provider "random" {}
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | The name of the pipeline | `string` | n/a | yes |
-| <a name="input_stages"></a> [stages](#input\_stages) | One or more stage blocks. | `any` | n/a | yes |
-| <a name="input_pipeline_type"></a> [pipeline\_type](#input\_pipeline\_type) | The CodePipeline pipeline\_type. Valid options are V1, V2 | `string` | `"V2"` | no |
-| <a name="input_execution_mode"></a> [execution\_mode](#input\_execution\_mode) | The CodePipeline execution\_mode. Valid options are `PARALLEL`, `QUEUED`, `SUPERSEDED` (default) | `string` | `"SUPERSEDED"` | no |
 | <a name="input_artifact_bucket_name"></a> [artifact\_bucket\_name](#input\_artifact\_bucket\_name) | the name of the S3 bucket used for storing the artifacts in the Codepipeline | `string` | n/a | yes |
+| <a name="input_execution_mode"></a> [execution\_mode](#input\_execution\_mode) | The CodePipeline execution\_mode. Valid options are `PARALLEL`, `QUEUED`, `SUPERSEDED` (default) | `string` | `"SUPERSEDED"` | no |
+| <a name="input_name"></a> [name](#input\_name) | The name of the pipeline | `string` | n/a | yes |
+| <a name="input_pipeline_type"></a> [pipeline\_type](#input\_pipeline\_type) | The CodePipeline pipeline\_type. Valid options are V1, V2 | `string` | `"V2"` | no |
+| <a name="input_stages"></a> [stages](#input\_stages) | One or more stage blocks. | `any` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | An arbitrary map of tags that can be added to all resources. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | The codepipeline ID |
 | <a name="output_arn"></a> [arn](#output\_arn) | The codepipeline ARN |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-c
+| <a name="output_id"></a> [id](#output\_id) | The codepipeline ID |
+<!-- END_TF_DOCS -->

@@ -19,4 +19,3 @@ output "arn" {
   description = "The codepipeline ARN"
   value       = module.codepipeline.arn
 }
-
